@@ -25,12 +25,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   try {
     showLoader();
-
     const breeds = await fetchBreeds();
-    breedSelect.style.display = "block";
     breedSelect.innerHTML = breeds
       .map((breed) => `<option value="${breed.id}">${breed.name}</option>`)
       .join("");
+    breedSelect.style.display = "block";
     hideLoader();
   } catch (err) {
     showError(err.message);
