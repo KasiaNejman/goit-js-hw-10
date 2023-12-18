@@ -5,7 +5,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   const loader = document.querySelector(".loader");
   const error = document.querySelector(".error");
   const catInfo = document.querySelector(".cat-info");
+
   breedSelect.style.display = "none";
+
   const showLoader = () => {
     loader.style.display = "block";
     error.style.display = "none";
@@ -23,6 +25,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   try {
     showLoader();
+    breedSelect.style.display = "block";
     const breeds = await fetchBreeds();
     breedSelect.innerHTML = breeds
       .map((breed) => `<option value="${breed.id}">${breed.name}</option>`)
