@@ -19,7 +19,7 @@ const populateBreeds = () => {
         breedSelect.innerHTML += `<option value="${breed.id}">${breed.name}</option>`;
       });
 
-      breedSelect.style.display = "none";
+      breedSelect.style.display = "block";
       loader.style.display = "none";
       new SlimSelect(".breed-select");
     })
