@@ -1,54 +1,62 @@
-import { fetchBreeds, fetchCatByBreed } from './cat-api.js';
+import { fetchBreeds, fetchCatByBreed } from "./cat-api.js";
 
-document.addEventListener('DOMContentLoaded', async () => {
-  const breedSelect = document.querySelector('.breed-select');
-  const loader = document.querySelector('.loader');
-  const error = document.querySelector('.error');
-  const catInfo = document.querySelector('.cat-info');
+const breedSelect = document.querySelector(".breed-select");
+const catInfoDiv = document.querySelector(".cat-info");
+const loader = document.querySelector(".loader");
+const error = document.querySelector(".error");
 
-  const showLoader = () => {
-    loader.style.display = 'block';
-    error.style.display = 'none';
-    catInfo.style.display = 'none';
-  };
+const populateBreeds = () => {
+  const breedSelect = document.querySelector(".breed-select");
+  const loader = document.querySelector(".loader");
+  const error = document.querySelector(".error");
 
-  const hideLoader = () => {
-    loader.style.display = 'none';
-  };
+  loader.style.display = "block";
+  error.style.display = "none";
 
-  const showError = errorMsg => {
-    error.textContent = errorMsg;
-    error.style.display = 'block';
-  };
+  fetchBreeds()
+    .then((breeds) => {
+      breeds.forEach((breed) => {
+        breedSelect.innerHTML += `<option value="${breed.id}">${breed.name}</option>`;
+      });
 
-  try {
-    showLoader();
-    const breeds = await fetchBreeds();
-    breedSelect.innerHTML = breeds
-      .map(breed => `<option value="${breed.id}">${breed.name}</option>`)
-      .join('');
-    hideLoader();
-  } catch (err) {
-    showError(err.message);
-  }
+      breedSelect.style.display = "none";
+      loader.style.display = "none";
+      new SlimSelect(".breed-select");
+    })
+    .catch((error) => {
+      breedSelect.style.display = "none";
+      loader.style.display = "none";
+      error.style.display = "block";
+      console.error("Error fetching cat breeds:", error);
+    });
+};
 
-  breedSelect.addEventListener('change', async () => {
-    const selectedBreed = breedSelect.value;
-    if (selectedBreed) {
-      try {
-        showLoader();
-        const catData = await fetchCatByBreed(selectedBreed);
-        catInfo.innerHTML = `
-          <img src="${catData.url}" alt="A cat">
-          <p>Name: ${catData.breeds[0].name}</p>
-          <p>Description: ${catData.breeds[0].description}</p>
-          <p>Temperament: ${catData.breeds[0].temperament}</p>
-        `;
-        catInfo.style.display = 'block';
-        hideLoader();
-      } catch (err) {
-        showError(err.message);
-      }
-    }
-  });
+const displayCatInfo = (breedId) => {
+  catInfoDiv.classList.add("hidden");
+  loader.classList.remove("hidden");
+  error.classList.add("hidden");
+
+  fetchCatByBreed(breedId)
+    .then((cat) => {
+      catInfoDiv.classList.remove("hidden");
+      loader.classList.add("hidden");
+      catInfoDiv.innerHTML = `
+        <img src="${cat.url}" alt="${cat.breeds[0].name}" />
+        <p>Nazwa rasy: ${cat.breeds[0].name}</p>
+        <p>Opis: ${cat.breeds[0].description}</p>
+        <p>Temperament: ${cat.breeds[0].temperament}</p>
+      `;
+    })
+    .catch(() => {
+      catInfoDiv.classList.add("hidden");
+      loader.classList.add("hidden");
+      error.classList.remove("hidden");
+    });
+};
+
+breedSelect.addEventListener("change", (event) => {
+  const selectedBreedId = event.target.value;
+  displayCatInfo(selectedBreedId);
 });
+
+populateBreeds();
