@@ -12,7 +12,6 @@ const populateBreeds = () => {
 
   loader.style.display = "block";
   error.style.display = "none";
-  breedSelect.style.display = "none";
 
   fetchBreeds()
     .then((breeds) => {
