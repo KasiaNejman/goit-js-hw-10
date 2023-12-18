@@ -6,7 +6,7 @@ body {
 
 .loader,
 .error {
-  display: block;
+  display: none;
   color: darkcyan;
   font-size: 20px;
   margin-top: 20px;
