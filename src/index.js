@@ -12,7 +12,6 @@ const populateBreeds = () => {
 
   loader.style.display = "block";
   error.style.display = "none";
-  breedSelect.style.display = "none";
 
   fetchBreeds()
     .then((breeds) => {
@@ -20,7 +19,7 @@ const populateBreeds = () => {
         breedSelect.innerHTML += `<option value="${breed.id}">${breed.name}</option>`;
       });
 
-      breedSelect.style.display = "block";
+      breedSelect.style.display = "none";
       loader.style.display = "none";
       new SlimSelect(".breed-select");
     })
